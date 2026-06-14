@@ -1,7 +1,11 @@
 import streamlit as st
 import random, time
 
-spelldata=[["naive","naieve","nave","niave","nieve"],["prove","proove","proov","proofe","porove"],["particular","particuler","partacular","particulier","particuliar"],["specific","spacefic","spacific","specefic","spacifec"],["advocate","advacate","addvocate","addvacate","advocote"],
+spelldata=[["naive","naieve","nave","niave","nieve"],
+           ["prove","proove","proov","proofe","porove"],
+           ["particular","particuler","partacular","particulier","particuliar"],
+           ["specific","spacefic","spacific","specefic","spacifec"],
+           ["advocate","advacate","addvocate","addvacate","advocote"],
            ["unequivocal","inequivocal","anequivocal","unequivacal","unequivocale"],
            ["psychological","pyschological","psychalogical","pychological","psychelogical"],
            ["receive","recieve","receeve","reseive","recive"],
@@ -14,7 +18,8 @@ for spellingset in spelldata:
     correct=spellingset[0]
     random.shuffle(spellingset)
     spellqs.append({"correct":correct,"options":spellingset})
-qs=5
+qs=5 #default number of questions
+
 def nl(num_of_lines):
      for i in range(num_of_lines):
          st.write(" ")
@@ -33,7 +38,8 @@ def update_session_state():
     if ss.counter==1:
         ss['start'] = True
         ss['stop']=False
-        ss.current_quiz=random.sample(spellqs,qs)
+        ss.current_quiz=random.sample(spellqs,ss.qs)
+        ss['button_label'] = ['Start'] + ['Submit', 'Next'] * ss.qs + ['Reload']
         ss.current=0
         ss['starttime']=time.time()
     elif ss.counter==len(ss.button_label)-1:
@@ -77,7 +83,7 @@ def quiz_app():
             averagetime=round(ss['timetaken']/ss['grade'])
         else:
             averagetime="Inf"
-        scorecard_placeholder.write(f"### **Your final score : {ss['grade']} / {len(ss.current_quiz)}**\n### **Your time : {ss['timetaken']}s**\n### **Average time: {averagetime}s**")
+        scorecard_placeholder.write(f"### **Your final score : {ss['grade']} / {len(ss.current_quiz)}**\n### **Your total time : {ss['timetaken']}s**\n### **Average time: {averagetime}s**")
 
 #activate session state to maintain state across refreshes
 ss=st.session_state
@@ -106,6 +112,8 @@ if 'grade' not in ss:
     ss['grade']=0
 if 'timetaken' not in ss:
     ss['timetaken']=0
+if 'qs' not in ss:
+    ss['qs']=qs
 
 
 st.title("Julie's Spelling Bee")
@@ -113,9 +121,11 @@ nl(1)
 st.header("How good is your spelling?")
 nl(1)
 st.instructions=st.empty()
+if not ss['start'] and not ss['stop'] and not ss['complete']:
+    ss.qs=int(st.text_input("How many questions?",ss.qs))
 if not ss['start']:
     st.instructions.write(f"""
-        There will be {qs} questions.
+        There will be {ss.qs} questions.
         For each question, select the correct spelling from the 5 options and click submit.
         Then click next to take you to the next question or finish the quiz.
     
