@@ -120,11 +120,18 @@ st.title("Julie's Spelling Bee")
 nl(1)
 st.header("How good is your spelling?")
 nl(1)
-st.instructions=st.empty()
+with st.container():
+    instructions_placeholder=st.empty()
+    questionnumber_placeholder=st.empty()
+    error_placeholder=st.empty()
 if not ss['start'] and not ss['stop'] and not ss['complete']:
-    ss.qs=int(st.text_input("How many questions?",ss.qs))
+    try:
+        ss.qs=int(questionnumber_placeholder.text_input("How many questions?",ss.qs))
+    except:
+        error_placeholder.error("Please only enter numeric values")
+
 if not ss['start']:
-    st.instructions.write(f"""
+    instructions_placeholder.write(f"""
         There will be {ss.qs} questions.
         For each question, select the correct spelling from the 5 options and click submit.
         Then click next to take you to the next question or finish the quiz.
