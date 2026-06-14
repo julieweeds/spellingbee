@@ -73,7 +73,8 @@ def quiz_app():
     if ss.complete:
         ss['grade'] = list(ss.user_answers.values()).count(True)
         ss['timetaken']=round(ss['endtime']-ss['starttime'])
-        scorecard_placeholder.write(f"### **Your final score : {ss['grade']} / {len(ss.current_quiz)}**\n### **Your time : {ss['timetaken']}s**")
+        averagetime=ss['timetaken']/ss['grade']
+        scorecard_placeholder.write(f"### **Your final score : {ss['grade']} / {len(ss.current_quiz)}**\n### **Your time : {ss['timetaken']}s**\n### ** Average time: {averagetime}s **")
 
 #activate session state to maintain state across refreshes
 ss=st.session_state
