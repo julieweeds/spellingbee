@@ -127,8 +127,10 @@ with st.container():
 if not ss['start'] and not ss['stop'] and not ss['complete']:
     try:
         ss.qs=int(questionnumber_placeholder.text_input("How many questions?",ss.qs))
+        if ss.qs<1 or ss.qs>10:
+            raise ValueError
     except:
-        error_placeholder.error("Please only enter numeric values")
+        error_placeholder.error("Please only enter numeric values between 1 and 10")
 
 if not ss['start']:
     instructions_placeholder.write(f"""
