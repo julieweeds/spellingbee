@@ -62,13 +62,13 @@ def quiz_app():
         options_placeholder.radio("",options,index=None,key=f"Q{ss.current}")
         nl(1)
     if ss.stop:
-
-        if ss[f'Q{ss.current}'] == ss.current_quiz[ss.current].get("correct"):
+        correct_answer=ss.current_quiz[ss.current].get("correct")
+        if ss[f'Q{ss.current}'] == correct_answer:
             ss.user_answers[ss.current]=True
             results_placeholder.success("Correct")
         else:
             ss.user_answers[ss.current]=False
-            results_placeholder.error("Incorrect")
+            results_placeholder.error(f"Incorrect.  The correct spelling is **{correct_answer}**")
 
     if ss.complete:
         ss['grade'] = list(ss.user_answers.values()).count(True)
